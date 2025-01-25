@@ -1,0 +1,142 @@
+
+User Access Verification
+
+Username: admin
+Password: 
+
+Toronto#show running-config 
+Building configuration...
+
+Current configuration : 2134 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname Toronto
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+username admin privilege 15 secret 5 $1$mERr$aqvZ1BhT8kcMtk6iNBY5F0
+username general privilege 5 secret 5 $1$mERr$aqvZ1BhT8kcMtk6iNBY5F0
+username guest secret 5 $1$mERr$aqvZ1BhT8kcMtk6iNBY5F0
+!
+!
+license udi pid CISCO2911/K9 sn FTX152454LS-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip domain-name Conestoga
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ ip address 192.168.1.2 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1.10
+ encapsulation dot1Q 10
+ ip address 172.16.10.1 255.255.255.128
+ ip access-group 100 out
+!
+interface GigabitEthernet0/1.20
+ encapsulation dot1Q 20
+ ip address 172.16.10.129 255.255.255.128
+!
+interface GigabitEthernet0/2
+ ip address 192.168.1.5 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+!
+router eigrp 200
+ network 172.16.10.0 0.0.0.127
+ network 172.16.10.128 0.0.0.127
+ network 192.168.1.4 0.0.0.3
+ network 172.16.5.0 0.0.0.127
+ network 172.16.5.128 0.0.0.127
+!
+router bgp 200
+ bgp log-neighbor-changes
+ no synchronization
+ neighbor 192.168.1.1 remote-as 100
+ network 172.16.10.0 mask 255.255.255.128
+ network 172.16.10.128 mask 255.255.255.128
+ redistribute eigrp 200 
+ redistribute connected 
+!
+router rip
+ version 2
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+access-list 100 deny icmp host 172.16.10.135 host 172.16.10.5 echo
+access-list 100 permit ip any any
+!
+!
+privilege configure level 15 interface
+privilege exec level 15 configure
+privilege exec level 15 configure terminal
+privilege exec level 5 ping
+privilege exec level 1 show
+privilege exec level 1 show ip
+privilege exec level 1 show ip interface
+privilege exec level 1 show ip interface brief
+privilege exec level 15 show running-config
+privilege exec level 1 show version
+!
+!
+!
+!
+line con 0
+ login local
+!
+line aux 0
+!
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+!
+!
+end
+
+
+Toronto#
